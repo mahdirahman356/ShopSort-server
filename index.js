@@ -31,9 +31,17 @@ async function run() {
     const database = client.db("shopSortDB");
     const productsCollection = database.collection("products");
 
-    
+
+    // all products
     app.get("/products", async(req, res) => {
-        const result = await productsCollection.find().toArray()
+      const search = req.query.search
+      const query = {}
+      if(search) {
+         query.$or=[
+          {productName: {$regex: search, $options: "i"}}
+         ]
+      }
+        const result = await productsCollection.find(query).toArray()
         res.send(result)
     })
 
