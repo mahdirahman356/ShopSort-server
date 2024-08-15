@@ -38,9 +38,10 @@ async function run() {
       const brand = req.query.brand || "";
       const category = req.query.category || "";
       const priceRange = req.query.priceRange || "";
-      const page = parseInt(req.query.page)
-      const size = parseInt(req.query.size)
-      console.log(page, size)
+      const page = parseInt(req.query.page) 
+      const size = parseInt(req.query.size) 
+
+    
       const query = {
         $and: []
       };
@@ -78,8 +79,10 @@ async function run() {
       delete query.$and;
   }
 
-  // Fetch products from the database based on the constructed query
-      const result = await productsCollection.find(query).toArray()
+      const result = await productsCollection.find(query)
+      .skip(page * size)
+      .limit(size)
+      .toArray()
       res.send(result)
     })
 
