@@ -12,3 +12,11 @@ This is the backend of the ShopSort project, a single-page e-commerce applicatio
 - **Categorization:** Filter products by Brand Name, Category Name, and Price Range.
 - **Sorting:** Sort products by Price (Low to High, High to Low) and Date Added (Newest First).
 - **Authentication:** Google and Email/Password authentication using Firebase.
+
+## Project Setup
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/mahdirahman356/ShopSort-server.git
+   cd shop-sort-backend
