@@ -38,7 +38,9 @@ async function run() {
       const brand = req.query.brand || "";
       const category = req.query.category || "";
       const priceRange = req.query.priceRange || "";
-  
+      const page = parseInt(req.query.page)
+      const size = parseInt(req.query.size)
+      console.log(page, size)
       const query = {
         $and: []
       };
@@ -83,7 +85,7 @@ async function run() {
 
     // products count
 
-    app.get("products-count", async(req, res) => {
+    app.get("/products-count", async(req, res) => {
       const count = await productsCollection.estimatedDocumentCount()
       res.send({count})
    })
