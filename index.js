@@ -33,16 +33,52 @@ async function run() {
 
 
     // all products
-    app.get("/products", async(req, res) => {
-      const search = req.query.search
-      const query = {}
-      if(search) {
-         query.$or=[
-          {productName: {$regex: search, $options: "i"}}
-         ]
-      }
-        const result = await productsCollection.find(query).toArray()
-        res.send(result)
+    app.get("/products", async (req, res) => {
+      const search = req.query.search || "";
+      const brand = req.query.brand || "";
+      const category = req.query.category || "";
+      const priceRange = req.query.priceRange || "";
+  
+      const query = {
+        $and: []
+      };
+       // Search by product name
+    if (search) {
+      query.$and.push({
+          productName: { $regex: search, $options: "i" }
+      });
+  }
+
+  // Filter by brand
+  if (brand) {
+      query.$and.push({
+          brand: { $regex: brand, $options: "i" }
+      });
+  }
+
+  // Filter by category
+  if (category) {
+      query.$and.push({
+          category: { $regex: category, $options: "i" }
+      });
+  }
+
+  // Filter by price range
+  if (priceRange) {
+    const [minPrice, maxPrice] = priceRange.split("-").map(Number);
+    query.$and.push({
+        price: { $gte: minPrice, $lte: maxPrice }
+    });
+}
+
+  // If no filters are provided, remove $and from the query
+  if (query.$and.length === 0) {
+      delete query.$and;
+  }
+
+  // Fetch products from the database based on the constructed query
+      const result = await productsCollection.find(query).toArray()
+      res.send(result)
     })
 
 
@@ -59,10 +95,10 @@ run().catch(console.dir);
 
 
 app.get("/", (req, res) => {
-    res.send("Shop Sort Server")
+  res.send("Shop Sort Server")
 })
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+  console.log(`Example app listening on port ${port}`)
 
 })
